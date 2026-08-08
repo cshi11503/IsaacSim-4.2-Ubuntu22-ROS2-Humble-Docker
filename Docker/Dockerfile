@@ -48,6 +48,11 @@ ENV LC_ALL=en_US.UTF-8
 # ------------------------------------------------------------
 
 USER root
+RUN chmod a+x \
+    /isaac-sim/runheadless.native.sh \
+    /isaac-sim/runheadless.sh \
+    /isaac-sim/isaac-sim.sh \
+    2>/dev/null || true
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     locales \
