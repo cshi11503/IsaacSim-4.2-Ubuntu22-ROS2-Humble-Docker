@@ -6,7 +6,7 @@ services:
 
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Docker/Dockerfile
       args:
         USERNAME: ${USER_NAME}
         USER_UID: ${USER_UID}
