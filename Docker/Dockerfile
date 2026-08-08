@@ -124,10 +124,9 @@ RUN if ! getent group ${USER_GID} >/dev/null; then \
 # ------------------------------------------------------------
 # Determine/create writable user directories
 # ------------------------------------------------------------
-
 RUN mkdir -p \
-    /home/${USERNAME} \
     /workspace \
+    /home/${USERNAME} \
     /home/${USERNAME}/.cache/ov \
     /home/${USERNAME}/.cache/pip \
     /home/${USERNAME}/.cache/nvidia/GLCache \
@@ -136,7 +135,8 @@ RUN mkdir -p \
     /home/${USERNAME}/.local/share/ov/data \
     /home/${USERNAME}/Documents \
     && chown -R ${USER_UID}:${USER_GID} /home/${USERNAME} \
-    && chown -R ${USER_UID}:${USER_GID} /workspace
+    && chown -R ${USER_UID}:${USER_GID} /workspace \
+    && chmod 775 /workspace
 
 
 # ------------------------------------------------------------
@@ -156,13 +156,28 @@ RUN echo "source /opt/ros/humble/setup.bash" \
 
 
 # ------------------------------------------------------------
-# Runtime user
+# Runtime environment
 # ------------------------------------------------------------
 
 ENV HOME=/home/${USERNAME}
 
-WORKDIR /workspace
+
+# ------------------------------------------------------------
+# Switch to non-root user
+# ------------------------------------------------------------
 
 USER ${USER_UID}:${USER_GID}
+
+
+# ------------------------------------------------------------
+# Default working directory
+# ------------------------------------------------------------
+
+WORKDIR /workspace
+
+
+# ------------------------------------------------------------
+# Keep container available for interactive use
+# ------------------------------------------------------------
 
 CMD ["/bin/bash"]
