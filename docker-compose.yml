@@ -1,0 +1,122 @@
+services:
+
+  isaac-sim:
+
+    container_name: ${CONTAINER_NAME}
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: ${USER_NAME}
+        USER_UID: ${USER_UID}
+        USER_GID: ${USER_GID}
+
+    image: casey/isaac-sim:${ISAAC_SIM_VERSION}-humble
+
+    # --------------------------------------------------------
+    # NVIDIA GPU
+    # --------------------------------------------------------
+
+    runtime: nvidia
+
+    gpus: all
+
+
+    # --------------------------------------------------------
+    # Networking
+    #
+    # Important for ROS 2 / DDS communication.
+    # --------------------------------------------------------
+
+    network_mode: host
+
+
+    # --------------------------------------------------------
+    # Environment
+    # --------------------------------------------------------
+
+    environment:
+
+      ACCEPT_EULA: ${ACCEPT_EULA}
+      PRIVACY_CONSENT: ${PRIVACY_CONSENT}
+
+      ROS_DISTRO: ${ROS_DISTRO}
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID}
+
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION}
+
+      ISAAC_SIM_PATH: ${ISAAC_SIM_PATH}
+
+      HOME: /home/${USER_NAME}
+
+      NVIDIA_VISIBLE_DEVICES: all
+
+      NVIDIA_DRIVER_CAPABILITIES: all
+
+
+    # --------------------------------------------------------
+    # Persistent storage
+    # --------------------------------------------------------
+
+    volumes:
+
+      # Your tutorial/code workspace
+      - ./workspace:/workspace
+
+      # Isaac Sim / Omniverse cache
+      - ./docker/cache/kit:/isaac-sim/kit/cache
+
+      - ./docker/cache/ov:/home/${USER_NAME}/.cache/ov
+
+      - ./docker/cache/pip:/home/${USER_NAME}/.cache/pip
+
+      - ./docker/cache/glcache:/home/${USER_NAME}/.cache/nvidia/GLCache
+
+      - ./docker/cache/computecache:/home/${USER_NAME}/.nv/ComputeCache
+
+      # Logs
+      - ./docker/logs:/home/${USER_NAME}/.nvidia-omniverse/logs
+
+      # Omniverse data
+      - ./docker/data:/home/${USER_NAME}/.local/share/ov/data
+
+      # Documents
+      - ./docker/documents:/home/${USER_NAME}/Documents
+
+
+    # --------------------------------------------------------
+    # Shared memory
+    #
+    # Isaac Sim can need considerably more than Docker's
+    # default 64 MB /dev/shm.
+    # --------------------------------------------------------
+
+    shm_size: "8gb"
+
+
+    # --------------------------------------------------------
+    # Interactive terminal
+    # --------------------------------------------------------
+
+    stdin_open: true
+
+    tty: true
+
+
+    # --------------------------------------------------------
+    # Keep container alive for VS Code / docker compose exec
+    # --------------------------------------------------------
+
+    command: >
+      bash -lc "
+      echo '=========================================';
+      echo ' Isaac Sim 4.2 + ROS 2 Humble';
+      echo ' User:' \$USER;
+      echo ' UID:' \$$(id -u);
+      echo ' GID:' \$$(id -g);
+      echo ' ROS:' \$ROS_DISTRO;
+      echo ' Workspace: /workspace';
+      echo '=========================================';
+      exec bash
+      "
