@@ -58,31 +58,31 @@ services:
     # --------------------------------------------------------
     # Persistent storage
     # --------------------------------------------------------
-
     volumes:
 
       # Your tutorial/code workspace
-      - ./workspace:/workspace
+      - /home/cshi30/isaacsim42/workspace:/workspace
 
       # Isaac Sim / Omniverse cache
-      - ./docker/cache/kit:/isaac-sim/kit/cache
+      - /home/cshi30/isaacsim42/cache/kit:/isaac-sim/kit/cache
 
-      - ./docker/cache/ov:/home/${USER_NAME}/.cache/ov
+      - /home/cshi30/isaacsim42/cache/ov:/home/${USER_NAME}/.cache/ov
 
-      - ./docker/cache/pip:/home/${USER_NAME}/.cache/pip
+      - /home/cshi30/isaacsim42/cache/pip:/home/${USER_NAME}/.cache/pip
 
-      - ./docker/cache/glcache:/home/${USER_NAME}/.cache/nvidia/GLCache
+      - /home/cshi30/isaacsim42/cache/glcache:/home/${USER_NAME}/.cache/nvidia/GLCache
 
-      - ./docker/cache/computecache:/home/${USER_NAME}/.nv/ComputeCache
+      - /home/cshi30/isaacsim42/cache/computecache:/home/${USER_NAME}/.nv/ComputeCache
 
       # Logs
-      - ./docker/logs:/home/${USER_NAME}/.nvidia-omniverse/logs
+      - /home/cshi30/isaacsim42/logs:/home/${USER_NAME}/.nvidia-omniverse/logs
 
       # Omniverse data
-      - ./docker/data:/home/${USER_NAME}/.local/share/ov/data
+      - /home/cshi30/isaacsim42/data:/home/${USER_NAME}/.local/share/ov/data
 
       # Documents
-      - ./docker/documents:/home/${USER_NAME}/Documents
+      - /home/cshi30/isaacsim42/documents:/home/${USER_NAME}/Documents
+    
 
 
     # --------------------------------------------------------
